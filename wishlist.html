@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6GunShop - Tactical Wishlist</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <script src="assets/js/wishlist.js"></script>
+    <script src="assets/js/cart.js"></script>
+    
+    <style>
+        .wishlist-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            background: #111;
+            border: 1px solid #222;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            gap: 20px;
+            transition: 0.3s;
+        }
+
+        .wishlist-item:hover {
+            border-color: #d4af37;
+        }
+
+        .wish-img {
+            width: 120px;
+            height: 80px;
+            object-fit: contain;
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .wish-info { flex: 2; }
+        .wish-info h3 { margin: 0 0 5px 0; color: #fff; }
+        .wish-info p { color: #d4af37; font-weight: bold; margin: 0; }
+
+        .wish-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-add-cart {
+            background: #d4af37;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .btn-remove-wish {
+            background: transparent;
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+
+        .btn-remove-wish:hover {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .empty-wishlist {
+            text-align: center;
+            padding: 100px 20px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <div class="logo">
+            <a href="index.html">6GUN<span>SHOP</span></a>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="category/handgun.html">Handguns</a></li>
+                <li><a href="category/rifle.html">Rifles</a></li>
+                <li><a href="category/sniper.html">Sniper</a></li>
+                <li><a href="category/ammo.html">Ammunition</a></li>
+                <li><a href="category/extension.html">Extension</a></li>
+            </ul>
+        </nav>
+        <div class="nav-icons">
+            <a href="wishlist.html" class="icon-link active"><i class="fas fa-heart"></i></a>
+            <a href="cart.html" class="icon-link"><i class="fas fa-shopping-cart"></i><span id="cart-count">0</span></a>
+        </div>
+    </div>
+</header>
+
+<div class="page-content">
+    <div class="category-hero">
+        <h1>Your Wishlist</h1>
+        <p>Tactical gear you've marked for mission success.</p>
+    </div>
+
+    <div class="wishlist-container" id="wish-container">
+        <p style="text-align: center;">Loading mission data...</p>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>© 2025 6GunShop. All Rights Reserved.</p>
+</footer>
+
+<script>
+async function renderWish() {
+    const container = document.getElementById("wish-container");
+    
+    // 1. Ambil list ID dari LocalStorage
+    // Pastikan key ini sama dengan yang ada di wishlist.js Anda
+    const savedWishlist = JSON.parse(localStorage.getItem('6gunshop_wishlist')) || [];
+
+    if (savedWishlist.length === 0) {
+        container.innerHTML = `
+            <div class="empty-wishlist">
+                <i class="far fa-heart" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                <h2>Your wishlist is empty</h2>
+                <p>Go back to the armory and save some gear.</p>
+                <a href="index.html" style="color: #d4af37; text-decoration: none; font-weight: bold;">Explore Products</a>
+            </div>`;
+        return;
+    }
+
+    try {
+        // 2. Ambil data lengkap produk dari JSON
+        const response = await fetch('assets/js/products.json');
+        const products = await response.json();
+
+        // 3. Filter produk yang ID-nya ada di wishlist
+        const wishProducts = products.filter(p => savedWishlist.includes(String(p.id)) || savedWishlist.includes(Number(p.id)));
+
+        container.innerHTML = "";
+        wishProducts.forEach(p => {
+            const item = document.createElement("div");
+            item.className = "wishlist-item";
+            item.innerHTML = `
+                <img src="assets/images/${p.image_url}" alt="${p.name}" class="wish-img">
+                <div class="wish-info">
+                    <h3>${p.name}</h3>
+                    <p>$${p.price.toLocaleString()}</p>
+                </div>
+                <div class="wish-actions">
+                    <button class="btn-add-cart" onclick="quickAddToCart(${p.id})">ADD TO CART</button>
+                    <button class="btn-remove-wish" onclick="removeFromWish(${p.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    } catch (error) {
+        console.error("Error loading wishlist:", error);
+        container.innerHTML = "<p>Error loading data.</p>";
+    }
+}
+
+// Fungsi bantu untuk hapus item dan refresh tampilan
+function removeFromWish(id) {
+    if (typeof toggleWishlist === 'function') {
+        toggleWishlist(id); // Memanggil fungsi dari wishlist.js Anda
+        renderWish();      // Refresh list
+    }
+}
+
+// Fungsi bantu untuk Add to Cart langsung dari Wishlist
+function quickAddToCart(id) {
+    fetch('assets/js/products.json')
+        .then(res => res.json())
+        .then(products => {
+            const product = products.find(p => p.id == id);
+            if (product && typeof addToCart === 'function') {
+                addToCart(product); // Memanggil fungsi dari cart.js Anda
+                updateCartCount();  // Update angka di navbar
+            }
+        });
+}
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('6gunshop_cart')) || [];
+    const count = cart.reduce((total, item) => total + item.qty, 0);
+    const countEl = document.getElementById('cart-count');
+    if (countEl) countEl.textContent = count;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    renderWish();
+    updateCartCount();
+});
+
+window.addEventListener("storage", renderWish);
+</script>
+
+</body>
+</html>

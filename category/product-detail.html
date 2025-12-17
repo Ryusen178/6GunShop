@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6GunShop - Tactical Detail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    
+    <script src="../assets/js/cart.js"></script>
+
+    <style>
+        /* Base Style Dark Theme */
+        body { background-color: #0a0a0a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .product-page-container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
+        
+        .product-info-wrapper { 
+            display: flex; gap: 50px; flex-wrap: wrap; background: #111; 
+            padding: 30px; border-radius: 12px; border: 1px solid #222; 
+        }
+
+        .product-image-area { 
+            flex: 1; min-width: 300px; background: #1a1a1a; padding: 20px; 
+            border-radius: 8px; display: flex; align-items: center; justify-content: center; 
+        }
+
+        .product-image-area img { max-width: 100%; height: auto; border-radius: 4px; transition: 0.3s; }
+        .product-image-area img:hover { transform: scale(1.05); }
+
+        .product-details-area { flex: 1.2; min-width: 300px; }
+        .product-details-area h1 { font-size: 2.5rem; margin-bottom: 10px; color: #fff; }
+        .product-sku { color: #888; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase; }
+        .product-price { font-size: 2rem; color: #d4af37; font-weight: bold; margin-bottom: 25px; }
+
+        .btn-add-to-cart { 
+            background: #d4af37; color: #000; border: none; padding: 15px 40px; 
+            font-weight: bold; font-size: 1.1rem; cursor: pointer; border-radius: 5px; 
+            transition: 0.3s; width: 100%; margin-bottom: 30px; 
+        }
+        .btn-add-to-cart:hover { background: #b8962d; transform: translateY(-2px); }
+
+        .product-description h2 { font-size: 1.4rem; border-left: 4px solid #d4af37; padding-left: 15px; margin-bottom: 15px; }
+        .product-description p { line-height: 1.6; color: #bbb; }
+
+        .product-specs-section { margin-top: 50px; }
+        .product-specs-section h2 { margin-bottom: 20px; font-size: 1.8rem; text-align: center; }
+
+        .specs-table { width: 100%; border-collapse: collapse; background: #111; border-radius: 8px; overflow: hidden; }
+        .specs-table th, .specs-table td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #222; }
+        .specs-table th { background: #1a1a1a; color: #888; width: 30%; }
+
+        .warning-text { 
+            margin-top: 30px; padding: 15px; background: rgba(255, 0, 0, 0.1); 
+            border: 1px solid #cc0000; color: #ff4444; border-radius: 5px; font-size: 0.85rem; 
+        }
+    </style>
+</head>
+<body>
+
+<main class="product-page-container">
+    <div id="product-loading" style="text-align: center; padding: 100px;">
+        <h2><i class="fas fa-spinner fa-spin"></i> Loading Tactical Data...</h2>
+    </div>
+    
+    <div id="product-display" style="display: none;">
+        <div class="product-info-wrapper">
+            <div class="product-image-area">
+                <img id="p-img" src="" alt="Product Image">
+            </div>
+
+            <div class="product-details-area">
+                <h1 id="p-name"></h1>
+                <p class="product-sku" id="p-sku-container">SKU: <span id="p-sku"></span></p>
+                <p class="product-price" id="p-price"></p>
+                
+                <button class="btn-add-to-cart">ADD TO CART</button>
+                
+                <div class="product-description">
+                    <h2>Features & Details</h2>
+                    <p id="p-desc"></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-specs-section">
+            <h2>Technical Specifications</h2>
+            <table class="specs-table" id="p-specs-table"></table>
+            <p class="warning-text">⚠️ <strong>WARNING:</strong> Always handle firearms with care. Read the owner's manual before use. Local laws regarding magazine capacity and firearm types may apply.</p>
+        </div>
+    </div>
+
+    <div id="product-error" style="display: none; text-align: center; padding: 100px;">
+        <h2 style="color: #ff4444;">Target Not Found!</h2>
+        <p>Produk tidak tersedia dalam database kami.</p>
+        <a href="../index.html" style="color: #d4af37; text-decoration: none;">Kembali ke Beranda</a>
+    </div>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    if (!productId) {
+        showError();
+        return;
+    }
+
+    fetch('../assets/js/products.json')
+        .then(response => response.json())
+        .then(products => {
+            const product = products.find(p => p.id === parseInt(productId));
+            if (product) {
+                renderProduct(product);
+            } else {
+                showError();
+            }
+        })
+        .catch(err => {
+            console.error("Fetch Error:", err);
+            showError();
+        });
+});
+
+function renderProduct(p) {
+    // Sembunyikan loading, tampilkan display
+    document.getElementById('product-loading').style.display = 'none';
+    document.getElementById('product-display').style.display = 'block';
+
+    const imgPath = `../assets/images/${p.image_url}`;
+
+    // Isi Konten
+    document.getElementById('p-img').src = imgPath;
+    document.getElementById('p-name').textContent = p.name;
+    document.getElementById('p-price').textContent = `$${parseFloat(p.price).toLocaleString()}`;
+    document.getElementById('p-desc').textContent = p.description;
+
+    // SKU Logic
+    if (p.upc) {
+        document.getElementById('p-sku').textContent = p.upc;
+    } else {
+        document.getElementById('p-sku-container').style.display = 'none';
+    }
+
+    // Add to Cart Logic
+    const btn = document.querySelector('.btn-add-to-cart');
+    btn.onclick = () => {
+        if(typeof addToCart === "function") {
+            addToCart(p.id, p.name, p.price, imgPath);
+        } else {
+            alert("Error: Script keranjang tidak ditemukan!");
+        }
+    };
+
+    // Table Specs Logic
+    const table = document.getElementById('p-specs-table');
+    table.innerHTML = "";
+    const labels = {
+        'caliber': 'Caliber',
+        'capacity': 'Capacity',
+        'action': 'Action',
+        'barrel_length': 'Barrel Length',
+        'finish': 'Finish'
+    };
+
+    Object.keys(labels).forEach(key => {
+        if (p[key]) {
+            table.innerHTML += `<tr><th>${labels[key]}</th><td>${p[key]}</td></tr>`;
+        }
+    });
+}
+
+function showError() {
+    document.getElementById('product-loading').style.display = 'none';
+    document.getElementById('product-error').style.display = 'block';
+}
+</script>
+</body>
+</html>

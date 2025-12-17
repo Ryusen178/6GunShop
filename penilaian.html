@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6GunShop - Customer Reviews</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #0a0a0a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        h1 { text-align: center; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* Card Review */
+        .review-card {
+            background: #111;
+            border: 1px solid #222;
+            border-left: 5px solid #d4af37;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .user-profile {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #d4af37;
+        }
+
+        .review-content { flex: 1; }
+        .user-name { font-weight: bold; font-size: 1.1rem; color: #fff; margin: 0; }
+        .weapon-tag { 
+            display: inline-block; 
+            background: #1a1a1a; 
+            color: #d4af37; 
+            padding: 3px 10px; 
+            font-size: 0.75rem; 
+            border-radius: 4px; 
+            margin: 5px 0;
+            border: 1px solid #333;
+        }
+
+        .stars { color: #d4af37; margin: 5px 0; }
+        .comment { font-style: italic; color: #bbb; margin-top: 10px; }
+        
+        .no-data { text-align: center; padding: 50px; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fas fa-shield-alt"></i> Verified Reviews</h1>
+    
+    <div id="reviews-list">
+        </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const reviewsList = document.getElementById('reviews-list');
+
+    // Data Simulasi (Contoh data orang yang sudah checkout)
+    // Di dunia nyata, data ini diambil dari Database setelah proses bayar selesai
+    const mockReviews = [
+        {
+            name: "Captain Price",
+            img: "assets/images/foto_pelanggan1.jpg", // Foto profil random
+            weapon: "Desert Eagle .50AE",
+            rating: 5,
+            comment: "Powerfull and reliable sidearm. The gold finish is premium!"
+        },
+        {
+            name: "Ghost Riley",
+            img: "assets/images/foto_pelanggan2.jpg",
+            weapon: "Colt M4 Carbine",
+            rating: 4,
+            comment: "Perfect for tactical stealth operations. Fast reloading."
+        },
+        {
+            name: "Arthur",
+            img: "assets/images/foto_pelanggan3.jpg",
+            weapon: "Barrett M82A1",
+            rating: 4,
+            comment: "Heavy but is normal."
+        },
+        {
+            name: "Jhon",
+            img: "https://i.pravatar.cc/150?u=jhon",
+            weapon: "Holographic Sight",
+            rating: 5,
+            comment: "Very very perfacts."
+        },
+        {
+            name: "Anna",
+            img: "https://i.pravatar.cc/150?u=Anna",
+            weapon: "5.56 NATO Bulk",
+            rating: 5,
+            comment: "Good ammo."
+        }
+    ];
+
+    if (mockReviews.length === 0) {
+        reviewsList.innerHTML = '<p class="no-data">Belum ada penilaian masuk.</p>';
+        return;
+    }
+
+    mockReviews.forEach(rv => {
+        let starHtml = '';
+        for(let i=0; i<5; i++) {
+            starHtml += i < rv.rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+        }
+
+        const card = `
+            <div class="review-card">
+                <img src="${rv.img}" class="user-profile" alt="User">
+                <div class="review-content">
+                    <p class="user-name">${rv.name}</p>
+                    <span class="weapon-tag"><i class="fas fa-crosshairs"></i> Purchased: ${rv.weapon}</span>
+                    <div class="stars">${starHtml}</div>
+                    <p class="comment">"${rv.comment}"</p>
+                </div>
+            </div>
+        `;
+        reviewsList.innerHTML += card;
+    });
+});
+</script>
+
+</body>
+</html>

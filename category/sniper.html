@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6GunShop - Sniper Rifle Collection</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/wishlist.js"></script>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <div class="logo">
+            <a href="../index.html">6GUN<span>SHOP</span></a>
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="handgun.html">Handguns</a></li>
+                <li><a href="rifle.html">Rifles</a></li>
+                <li><a href="sniper.html" class="active">Sniper</a></li>
+                <li><a href="ammo.html">Ammunition</a></li>
+                <li><a href="extension.html">Extension</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-icons">
+            <a href="../wishlist.html" title="Wishlist" class="icon-link">
+                <i class="far fa-heart"></i>
+            </a>
+            <a href="../cart.html" title="Cart" class="icon-link cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="page-content">
+    <div class="category-hero">
+        <h1>Precision Sniper Rifles</h1>
+        <p>Master the distance with our world-class long-range precision platforms.</p>
+    </div>
+
+    <section class="product-grid">
+        <div class="product-card">
+            <div class="product-img">
+                <img src="../assets/images/sniper-04.jpg" alt="Barrett M82A1">
+            </div>
+            <h3>Barrett M82A1</h3>
+            <p class="spec">.50 BMG • 10 Rounds</p>
+            <p class="price">$8,900</p>
+            <a href="product-detail.html?id=5" class="btn-product">View Details</a> 
+        </div>
+
+        <div class="product-card">
+            <div class="product-img">
+                <img src="../assets/images/sniper-03.jpg" alt="Remington 700">
+            </div>
+            <h3>Remington 700 PSS</h3>
+            <p class="spec">.308 Win • 5 Rounds</p>
+            <p class="price">$1,200</p>
+            <a href="product-detail.html?id=6" class="btn-product">View Details</a> 
+        </div>
+
+        <div class="product-card">
+            <div class="product-img">
+                <img src="../assets/images/sniper-02.jpg" alt="Accuracy International">
+            </div>
+            <h3>Accuracy International AXMC</h3>
+            <p class="spec">.338 Lapua • 10 Rounds</p>
+            <p class="price">$7,500</p>
+            <a href="product-detail.html?id=7" class="btn-product">View Details</a> 
+        </div>
+
+        <div class="product-card">
+            <div class="product-img">
+                <img src="../assets/images/sniper-01.jpg" alt="CheyTac M200">
+            </div>
+            <h3>CheyTac M200 Intervention</h3>
+            <p class="spec">.408 CheyTac • 7 Rounds</p>
+            <p class="price">$12,000</p>
+            <a href="product-detail.html?id=8" class="btn-product">View Details</a> 
+        </div>
+    </section>
+</div>
+
+<footer class="footer">
+    <p>© 2025 6GunShop. All Rights Reserved.</p>
+</footer>
+
+<script>
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('6gunshop_cart')) || [];
+        const count = cart.reduce((total, item) => total + item.qty, 0);
+        const countEl = document.getElementById('cart-count');
+        if(countEl) countEl.textContent = count;
+    }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6GunShop - Premium Firearms & Gear</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <script src="assets/js/cart.js"></script>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <div class="logo">
+            <a href="index.html">6GUN<span>SHOP</span></a>
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="category/handgun.html">Handguns</a></li>
+                <li><a href="category/rifle.html">Rifles</a></li>
+                <li><a href="category/sniper.html">Sniper</a></li>
+                <li><a href="category/ammo.html">Ammunition</a></li>
+                <li><a href="category/extension.html">Extension</a></li>
+                <li><a href="penilaian.html">Ratings</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-icons">
+            <a href="wishlist.html" title="Wishlist" class="icon-link">
+                <i class="far fa-heart"></i>
+            </a>
+            <a href="cart.html" title="Cart" class="icon-link cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="page-content">
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">BUY IT & TRY IT PROGRAM</h1>
+            <p class="hero-sub">Experience peace of mind with our 30-day handgun trial program.</p>
+            <a href="category/handgun.html" class="btn-primary">Learn More</a>
+        </div>
+    </header>
+
+    <section class="categories">
+        <div class="best-banner">
+            <img src="assets/images/PST-01.jpeg" alt="Best Seller">
+            <div class="best-overlay">
+                <h2>🔥 TOP SELLERS</h2>
+                <p>Most Demanded Guns This Month</p>
+                <a href="category/handgun.html" class="btn-outline">Shop Now</a>
+            </div>
+        </div>
+
+        <div class="category-grid">
+            <a href="category/handgun.html" class="category-card">
+                <img src="assets/images/PST-03.jpg" alt="Handguns">
+                <div class="card-overlay"><h3>HANDGUNS</h3></div>
+            </a>
+            <a href="category/sniper.html" class="category-card">
+                <img src="assets/images/SNR-03.jpg" alt="Sniper Rifle">
+                <div class="card-overlay"><h3>SNIPER RIFLE</h3></div>
+            </a>
+            <a href="category/rifle.html" class="category-card">
+                <img src="assets/images/AR-04.jpeg" alt="Rifle">
+                <div class="card-overlay"><h3>RIFLES</h3></div>
+            </a>
+            <a href="category/ammo.html" class="category-card">
+                <img src="assets/images/amuniton rifle.jpg" alt="Ammunition">
+                <div class="card-overlay"><h3>AMMUNITION</h3></div>
+            </a>
+            <a href="category/extension.html" class="category-card">
+                <img src="assets/images/ACC-SC-03.jpeg" alt="Extension">
+                <div class="card-overlay"><h3>EXTENSIONS</h3></div>
+            </a>
+        </div>
+    </section>
+</div>
+
+<footer class="footer">
+    <div class="footer-content">
+        <p>© 2025 6GunShop. All Rights Reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('6gunshop_cart')) || [];
+        // Menghitung total qty semua barang di keranjang
+        const count = cart.reduce((total, item) => total + item.qty, 0);
+        document.getElementById('cart-count').textContent = count;
+    }
+
+    // Jalankan saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
+
+</body>
+</html>

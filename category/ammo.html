@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6GunShop - Ammunition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <div class="logo">
+            <a href="../index.html">6GUN<span>SHOP</span></a>
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="handgun.html">Handguns</a></li>
+                <li><a href="rifle.html">Rifles</a></li>
+                <li><a href="sniper.html">Sniper</a></li>
+                <li><a href="ammo.html" class="active">Ammunition</a></li>
+                <li><a href="extension.html">Extension</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-icons">
+            <a href="../wishlist.html" title="Wishlist" class="icon-link">
+                <i class="far fa-heart"></i>
+            </a>
+            <a href="../cart.html" title="Cart" class="icon-link cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="category-hero">
+    <h1>Ammunition Collection</h1>
+    <p>High-quality rounds for training, defense, and long-range precision.</p>
+</div>
+
+<section class="product-grid">
+    <div class="product-card">
+        <div class="product-img">
+            <img src="../assets/images/ammo-01.jpg" alt="9mm">
+        </div>
+        <h3>9mm Luger FMJ</h3>
+        <p class="spec">9mm • 50 Rounds</p>
+        <p class="price">$25</p>
+        <a href="product-detail.html?id=13" class="btn-product">View Details</a> 
+    </div>
+
+    <div class="product-card">
+        <div class="product-img">
+            <img src="../assets/images/ammo-02.jpg" alt="5.56">
+        </div>
+        <h3>5.56 NATO Bulk</h3>
+        <p class="spec">5.56 NATO • 1000 Rounds</p>
+        <p class="price">$450</p>
+        <a href="product-detail.html?id=14" class="btn-product">View Details</a> 
+    </div>
+</section>
+
+<footer class="footer">
+    <p>© 2025 6GunShop. All Rights Reserved.</p>
+</footer>
+
+<script>
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('6gunshop_cart')) || [];
+        const count = cart.reduce((total, item) => total + item.qty, 0);
+        const countEl = document.getElementById('cart-count');
+        if(countEl) countEl.textContent = count;
+    }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
+
+</body>
+</html>

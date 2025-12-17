@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6GunShop - Your Tactical Cart</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <script src="assets/js/cart.js"></script>
+
+    <style>
+        .cart-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #111;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cart-table th {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 2px solid #d4af37;
+            color: #888;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .cart-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #222;
+            vertical-align: middle;
+        }
+
+        .item-detail {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .item-detail img {
+            width: 80px;
+            height: 60px;
+            object-fit: contain;
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .item-name {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Styling Input Quantity */
+        .qty-input {
+            width: 60px;
+            padding: 8px;
+            background: #000;
+            border: 1px solid #444;
+            color: #d4af37;
+            text-align: center;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .price-text { color: #bbb; }
+        .total-text { color: #d4af37; font-weight: bold; font-size: 1.1rem; }
+
+        .btn-remove {
+            background: transparent;
+            color: #ff4444;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .btn-remove:hover { color: #fff; transform: scale(1.2); }
+
+        .cart-summary {
+            margin-top: 40px;
+            text-align: right;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+
+        #grand-total {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        #grand-total span { color: #d4af37; }
+
+        .btn-checkout {
+            background: #d4af37;
+            color: #000;
+            padding: 15px 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-checkout:hover {
+            background: #b8962d;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .empty-cart-msg {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <div class="logo">
+            <a href="index.html">6GUN<span>SHOP</span></a>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="category/handgun.html">Handguns</a></li>
+                <li><a href="category/rifle.html">Rifles</a></li>
+                <li><a href="category/sniper.html">Sniper</a></li>
+                <li><a href="category/ammo.html">Ammunition</a></li>
+                <li><a href="category/extension.html">Extension</a></li>
+            </ul>
+        </nav>
+        <div class="nav-icons">
+            <a href="wishlist.html" class="icon-link"><i class="far fa-heart"></i></a>
+            <a href="cart.html" class="icon-link active"><i class="fas fa-shopping-cart"></i><span id="cart-count">0</span></a>
+        </div>
+    </div>
+</header>
+
+<div class="page-content">
+    <div class="category-hero">
+        <h1>Tactical Cart</h1>
+        <p>Review your gear before proceeding to the front line.</p>
+    </div>
+
+    <div class="cart-container">
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="cart-body">
+                </tbody>
+        </table>
+        
+        <div class="cart-summary">
+            <h3 id="grand-total">Total: <span>$0</span></h3>
+            <button class="btn-checkout" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>© 2025 6GunShop. All Rights Reserved.</p>
+</footer>
+
+<script>
+    function renderCart() {
+        const cart = typeof loadCart === "function" ? loadCart() : [];
+        const container = document.getElementById("cart-body");
+        const totalDisplay = document.getElementById("grand-total");
+        let html = "";
+        let grandTotal = 0;
+
+        if (cart.length === 0) {
+            container.innerHTML = `<tr><td colspan="5" class="empty-cart-msg"><h3>Your cart is empty.</h3><a href="index.html" style="color:#d4af37;">Return to Armory</a></td></tr>`;
+            totalDisplay.innerHTML = "Total: <span>$0</span>";
+            updateCartBadge(0);
+            return;
+        }
+
+        cart.forEach((p, i) => {
+            let itemTotal = p.price * p.qty;
+            grandTotal += itemTotal;
+            html += `
+            <tr>
+                <td>
+                    <div class="item-detail">
+                        <img src="${p.img}" alt="${p.name}">
+                        <span class="item-name">${p.name}</span>
+                    </div>
+                </td>
+                <td class="price-text">$${p.price.toLocaleString()}</td>
+                <td>
+                    <input type="number" value="${p.qty}" min="1" class="qty-input" 
+                           onchange="changeQty(${i}, this.value)">
+                </td>
+                <td class="total-text">$${itemTotal.toLocaleString()}</td>
+                <td>
+                    <button class="btn-remove" onclick="removeItem(${i})">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>`;
+        });
+
+        container.innerHTML = html;
+        totalDisplay.innerHTML = `Total: <span>$${grandTotal.toLocaleString()}</span>`;
+        updateCartBadge(cart.length);
+    }
+
+    function changeQty(index, val) {
+        if (typeof updateQty === "function") {
+            updateQty(index, parseInt(val));
+            renderCart();
+        }
+    }
+
+    function removeItem(index) {
+        if (typeof removeCart === "function") {
+            removeCart(index);
+            renderCart();
+        }
+    }
+
+    function updateCartBadge(count) {
+        const badge = document.getElementById('cart-count');
+        if(badge) badge.textContent = count;
+    }
+
+    function proceedToCheckout() {
+        alert("Proceeding to secure checkout... (Integrasi Payment Gateway)");
+    }
+
+    document.addEventListener("DOMContentLoaded", renderCart);
+</script>
+
+</body>
+</html>
+
